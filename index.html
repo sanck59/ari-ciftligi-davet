@@ -28,7 +28,7 @@
   ol { text-align:left; color:var(--cream); padding-left:22px; margin:8px 0 0; line-height:1.6; font-size:15px; }
   ol b { color:var(--amber); }
   .not { color:var(--muted); font-size:12.5px; margin-top:18px; line-height:1.5; }
-  .gizli { display:none; }
+  .gizli { display:none !important; }
 </style>
 </head>
 <body>
@@ -60,7 +60,7 @@
 
 <script>
   // Her yeni derlemeden sonra bu adresi güncelle
-  var APK_URL = 'APK_LINKI_BURAYA';
+  var APK_URL = 'https://expo.dev/artifacts/eas/G3n926IDX3BrYQZmZvEpv5Z_48lT0ah_ylx06ZlpUxI.apk';
 
   var params = new URLSearchParams(location.search);
   var kod = (params.get('kod') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16);
