@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arı Çiftliği - Davet</title>
+<meta property="og:title" content="Arı Çiftliği'ne davetlisin">
+<meta property="og:description" content="Sesli odalar, hediyeler, çiftlik oyunu. Davet kodunla katıl.">
+<meta property="og:image" content="logo.png">
+<link rel="icon" href="logo.png">
+<style>
+  :root { --bg:#16110b; --card:#241c12; --line:#3a2e1c; --cream:#fff0cf; --muted:#b9a57e; --amber:#f6b422; --dark:#1b1408; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--cream);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         display:flex; justify-content:center; padding:24px 16px; }
+  main { width:100%; max-width:420px; text-align:center; }
+  .logo { width:112px; height:112px; border-radius:26px; border:2px solid var(--line); margin-top:12px; }
+  h1 { font-size:28px; margin:16px 0 4px; }
+  .alt { color:var(--muted); font-size:15px; margin:0 0 22px; }
+  .kutu { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px; margin-bottom:16px; }
+  .etiket { color:var(--muted); font-size:13px; font-weight:700; }
+  .kod { color:var(--amber); font-size:34px; font-weight:900; letter-spacing:4px; margin:6px 0 12px; word-break:break-all; }
+  button, a.btn { display:block; width:100%; border:0; border-radius:14px; padding:15px; font-size:16px; font-weight:800;
+                  text-decoration:none; cursor:pointer; margin-top:10px; font-family:inherit; }
+  .ana { background:var(--amber); color:var(--dark); }
+  .ikinci { background:transparent; color:var(--cream); border:1px solid var(--line); }
+  ol { text-align:left; color:var(--cream); padding-left:22px; margin:8px 0 0; line-height:1.6; font-size:15px; }
+  ol b { color:var(--amber); }
+  .not { color:var(--muted); font-size:12.5px; margin-top:18px; line-height:1.5; }
+  .gizli { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="logo.png" alt="Arı Çiftliği">
+  <h1>Arı Çiftliği</h1>
+  <p class="alt">Sesli odalar, hediyeler, çiftlik oyunu</p>
+
+  <div class="kutu" id="kodKutu">
+    <div class="etiket">Davet kodun</div>
+    <div class="kod" id="kod"></div>
+    <button class="ikinci" id="kopyala">Kodu kopyala</button>
+  </div>
+
+  <a class="btn ana" id="ac" href="#">Uygulamayı aç</a>
+  <a class="btn ikinci" id="indir" href="#">Uygulamayı indir (Android)</a>
+
+  <div class="kutu" style="margin-top:18px; text-align:left;">
+    <div class="etiket" style="text-align:center; margin-bottom:6px;">Nasıl katılırım?</div>
+    <ol>
+      <li><b>Uygulamayı indir</b> ve kur. Telefon izin isterse "Bu kaynaktan yükle"ye izin ver.</li>
+      <li><b>Google ile giriş yap</b> ve bir takma ad seç.</li>
+      <li>Kişisel panelde <b>Davet kodu gir</b>'e dokun ve kodunu yaz.</li>
+    </ol>
+  </div>
+
+  <p class="not">Şu an yalnızca Android telefonlarda çalışır. Kurulum sırasında Play Protect uyarısı çıkarsa "Yine de yükle" de.</p>
+</main>
+
+<script>
+  // Her yeni derlemeden sonra bu adresi güncelle
+  var APK_URL = 'APK_LINKI_BURAYA';
+
+  var params = new URLSearchParams(location.search);
+  var kod = (params.get('kod') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16);
+
+  var kutu = document.getElementById('kodKutu');
+  if (kod) {
+    document.getElementById('kod').textContent = kod;
+  } else {
+    kutu.className += ' gizli';
+  }
+
+  var indir = document.getElementById('indir');
+  var ac = document.getElementById('ac');
+  var indirmeVar = APK_URL.indexOf('http') === 0;
+
+  if (indirmeVar) {
+    indir.href = APK_URL;
+  } else {
+    indir.className += ' gizli';
+  }
+
+  // Uygulama kuruluysa açar, değilse indirme adresine yönlendirir
+  var hedef = 'intent://davet' + (kod ? '?kod=' + kod : '') +
+    '#Intent;scheme=ariciftligi;package=com.ariciftligi.app;' +
+    (indirmeVar ? 'S.browser_fallback_url=' + encodeURIComponent(APK_URL) + ';' : '') + 'end';
+  ac.href = hedef;
+
+  document.getElementById('kopyala').addEventListener('click', function () {
+    var b = this;
+    function bitti() { b.textContent = 'Kopyalandı ✓'; setTimeout(function () { b.textContent = 'Kodu kopyala'; }, 2000); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(kod).then(bitti, bitti);
+    } else {
+      var t = document.createElement('textarea'); t.value = kod; document.body.appendChild(t);
+      t.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(t); bitti();
+    }
+  });
+</script>
+</body>
+</html>
